@@ -1,5 +1,5 @@
 import "./CountrieDetails.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BASE_URL, COUNTRIE_DETAIL } from "../../helpers/consts";
 import axios from "axios";
 import type { TypeCountrieDetails } from "../../helpers/types";
@@ -11,12 +11,14 @@ interface Props {
 
 const CountrieDetails = ({ currentCountrie }: Props) => {
     const [countrie, setCountrie] = useState<TypeCountrieDetails>();
+    const [borders, setBorders] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (currentCountrie !== null) {
             const fetchCountrie = async () => {
                 setLoading(true);
+                setBorders([]);
                 const { data } = await axios.get(
                     BASE_URL + COUNTRIE_DETAIL + `/${currentCountrie}`
                 );
@@ -26,7 +28,25 @@ const CountrieDetails = ({ currentCountrie }: Props) => {
             fetchCountrie();
         }
     }, [currentCountrie]);
-    console.log(countrie);
+
+    const fetchBorders = useCallback(async () => {
+        if (!countrie?.borders || countrie.borders.length === 0) return;
+
+        const promises = countrie.borders.map(async (code) => {
+            const { data } = await axios.get(
+                BASE_URL + COUNTRIE_DETAIL + `/${code}`
+            );
+            return data[0].name.common;
+        });
+        const names = await Promise.all(promises);
+        setBorders(names);
+    }, [countrie]);
+
+    useEffect(() => {
+        if (countrie) {
+            void fetchBorders();
+        }
+    }, [countrie, fetchBorders]);
 
     if (!currentCountrie) {
         return (
@@ -63,8 +83,8 @@ const CountrieDetails = ({ currentCountrie }: Props) => {
             {countrie.borders && countrie.borders.length > 0 ? (
                 <ul className="countrieName__secondBlock">
                     <span>Borders with:</span>
-                    {countrie.borders.map((code, index) => (
-                        <li key={`${code}-${index}`}>{code}</li>
+                    {borders.map((name, index) => (
+                        <li key={`${name}-${index}`}>{name}</li>
                     ))}
                 </ul>
             ) : null}
