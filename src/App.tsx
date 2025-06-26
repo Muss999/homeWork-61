@@ -7,9 +7,6 @@ import CountrieDetails from "./components/CountrieDetails/CountrieDetails";
 import { BASE_URL, ALL_COUNTRIES } from "./helpers/consts";
 import Preloader from "./components/Preloader/Preloader";
 
-// const BASE_URL =
-//     "https://restcountries.com/v3.1/all?fields=cca3,name,capital,population,flags,borders";
-
 const App = () => {
     const [countries, setCountries] = useState<TypeCountrie[]>([]);
     const [loading, setLoading] = useState(true);
@@ -18,7 +15,10 @@ const App = () => {
     useEffect(() => {
         const fetchData = async () => {
             const { data } = await axios.get(BASE_URL + ALL_COUNTRIES);
-            setCountries(data);
+            const sortedData = data.sort((a: TypeCountrie, b: TypeCountrie) =>
+                a.name.common.localeCompare(b.name.common)
+            );
+            setCountries(sortedData);
             setLoading(false);
         };
         fetchData();
