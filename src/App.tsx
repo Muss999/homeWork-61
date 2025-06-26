@@ -5,18 +5,21 @@ import CountrieItem from "./components/CountrieItem/CountrieItem";
 import type { TypeCountrie } from "./helpers/types";
 import CountrieDetails from "./components/CountrieDetails/CountrieDetails";
 import { BASE_URL, ALL_COUNTRIES } from "./helpers/consts";
+import Preloader from "./components/Preloader/Preloader";
 
 // const BASE_URL =
 //     "https://restcountries.com/v3.1/all?fields=cca3,name,capital,population,flags,borders";
 
 const App = () => {
     const [countries, setCountries] = useState<TypeCountrie[]>([]);
+    const [loading, setLoading] = useState(true);
     const [currentCountrie, SetCurrentCountrie] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             const { data } = await axios.get(BASE_URL + ALL_COUNTRIES);
             setCountries(data);
+            setLoading(false);
         };
         fetchData();
     }, []);
@@ -28,15 +31,17 @@ const App = () => {
     return (
         <div className="container">
             <div className="countriesList">
-                {countries.map((countrie, index) => {
-                    return (
+                {loading ? (
+                    <Preloader />
+                ) : (
+                    countries.map((countrie, index) => (
                         <CountrieItem
                             countrie={countrie}
-                            key={`${countrie.name}-${index}`}
+                            key={`${countrie.name.common}-${index}`}
                             changeCurrentCountrie={changeCurrentCountrie}
                         />
-                    );
-                })}
+                    ))
+                )}
             </div>
             <CountrieDetails currentCountrie={currentCountrie} />
         </div>

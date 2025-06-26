@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { BASE_URL, COUNTRIE_DETAIL } from "../../helpers/consts";
 import axios from "axios";
 import type { TypeCountrieDetails } from "../../helpers/types";
+import Preloader from "../Preloader/Preloader";
 
 interface Props {
     currentCountrie: string | null;
@@ -10,25 +11,33 @@ interface Props {
 
 const CountrieDetails = ({ currentCountrie }: Props) => {
     const [countrie, setCountrie] = useState<TypeCountrieDetails>();
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         if (currentCountrie !== null) {
             const fetchCountrie = async () => {
+                setLoading(true);
                 const { data } = await axios.get(
                     BASE_URL + COUNTRIE_DETAIL + `/${currentCountrie}`
                 );
                 setCountrie(data[0]);
+                setLoading(false);
             };
             fetchCountrie();
         }
     }, [currentCountrie]);
     console.log(countrie);
 
-    if (!currentCountrie || !countrie) {
+    if (!currentCountrie) {
         return (
             <div className="countrieName">
                 <h2>Choose the country</h2>
             </div>
         );
+    }
+
+    if (loading || !countrie) {
+        return <Preloader />;
     }
 
     const capitalText =
