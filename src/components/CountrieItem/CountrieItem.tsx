@@ -3,9 +3,19 @@ import "./CountrieItem.css";
 
 interface Props {
     countrie: TypeCountrie;
+    changeCurrentCountrie: (cca3: string) => void;
 }
-const CountrieItem = ({ countrie }: Props) => {
-    return <div className="countrieItem">{countrie.name.common}</div>;
+const CountrieItem = ({ countrie, changeCurrentCountrie }: Props) => {
+    return (
+        <div
+            className="countrieItem"
+            onClick={() => {
+                changeCurrentCountrie(countrie.cca3);
+            }}
+        >
+            {countrie.name.common}
+        </div>
+    );
 };
 
 export default CountrieItem;

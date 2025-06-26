@@ -1,0 +1,35 @@
+.countrieName {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+.countrieName__firstBlock {
+    display: flex;
+    margin-bottom: 40px;
+}
+.countrieName__firstBlock_column {
+    width: 50%;
+}
+.countrieName__firstBlock_column h2 {
+    margin: 0 0 20px;
+    font-size: 40px;
+}
+.countrieName__firstBlock_column p {
+    margin: 0 0 10px;
+    font-size: 20px;
+}
+.countrieName__firstBlock_img {
+    width: 40%;
+}
+.countrieName__secondBlock {
+    font-size: 25px;
+    margin: 0;
+    padding: 0;
+}
+.countrieName__secondBlock li {
+    font-size: 18px;
+    margin-left: 30px;
+}

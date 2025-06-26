@@ -3,4 +3,6 @@
     font-size: 18px;
     cursor: pointer;
     border: 1px solid black;
+    border-radius: 10px;
+    text-align: center;
 }
